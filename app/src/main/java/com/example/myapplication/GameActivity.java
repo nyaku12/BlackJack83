@@ -34,10 +34,8 @@ public class GameActivity extends AppCompatActivity {
         Button hit_button = findViewById(R.id.hit_button);
         Button stand_button = findViewById(R.id.stand_button);
         Button double_button = findViewById(R.id.double_button);
-        Button split_button = findViewById(R.id.split_button);
         hit_button.setVisibility(View.INVISIBLE);
         double_button.setVisibility(View.INVISIBLE);
-        split_button.setVisibility(View.INVISIBLE);
         stand_button.setVisibility(View.INVISIBLE);
         TextView title = findViewById(R.id.title);
         // title.setVisibility(View.VISIBLE);
@@ -104,7 +102,6 @@ public class GameActivity extends AppCompatActivity {
         Button hit_button = findViewById(R.id.hit_button);
         Button stand_button = findViewById(R.id.stand_button);
         Button double_button = findViewById(R.id.double_button);
-        Button split_button = findViewById(R.id.split_button);
 
         // Обработчик для кнопки "Hit"
         hit_button.setOnClickListener(view -> {
@@ -125,12 +122,6 @@ public class GameActivity extends AppCompatActivity {
         // Обработчик для кнопки "Double Down"
         double_button.setOnClickListener(view -> {
             game.doubleDown();
-            update_UI(game);
-        });
-
-        // Обработчик для кнопки "Split" (теперь вызывается правильный метод)
-        split_button.setOnClickListener(view -> {
-            game.split();
             update_UI(game);
         });
     }
@@ -157,14 +148,10 @@ public class GameActivity extends AppCompatActivity {
         Button hit_button = findViewById(R.id.hit_button);
         Button stand_button = findViewById(R.id.stand_button);
         Button double_button = findViewById(R.id.double_button);
-        Button split_button = findViewById(R.id.split_button);
 
         stand_button.setVisibility(View.VISIBLE);
         if (game.canDouble()) {
             double_button.setVisibility(View.VISIBLE);
-        }
-        if (game.canSplit()) {
-            split_button.setVisibility(View.VISIBLE);
         }
         hit_button.setVisibility(View.VISIBLE);
     }
@@ -254,4 +241,25 @@ public class GameActivity extends AppCompatActivity {
             return 0; // Если ошибка, возвращаем 0
         }
     }
+
+    private void displayCards(BlackjackGame game) {
+        // Получаем текущую руку игрока
+        BlackjackGame.Hand currentHand = game.getCurrentHand();
+
+        TextView player_cards = findViewById(R.id.players_cards);
+        if (currentHand != null) {
+            player_cards.setText(game.printHandInfo(currentHand));
+        } else {
+            player_cards.setText("Ход игрока завершён");
+        }
+
+        // Отображаем карты дилера (если уже открыты)
+        TextView dealers_cards = findViewById(R.id.dealers_cards);
+        if (game.getDealerHand() != null) {
+            // true — скрыть первую карту (если ещё идёт игра), false — показать все
+            boolean hideFirstCard = !game.isPlayerTurnComplete();
+            dealers_cards.setText(game.printHandInfo(game.getDealerHand(), hideFirstCard));
+        }
+    }
+
 }
