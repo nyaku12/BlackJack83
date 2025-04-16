@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 import android.view.Window;
@@ -39,8 +40,14 @@ public class GameActivity extends AppCompatActivity {
         split_button.setVisibility(View.INVISIBLE);
         stand_button.setVisibility(View.INVISIBLE);
         TextView title = findViewById(R.id.title);
-        title.setVisibility(View.VISIBLE);
-
+        // title.setVisibility(View.VISIBLE);
+        // Установите задержку на 3 секунды (3000 миллисекунд)
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                title.setVisibility(View.GONE); // Скрыть текст
+            }
+        }, 5000);
         // Инициализация UI элементов
         TextView c_stack = findViewById(R.id.current_stack);
         c_stack.setText(String.valueOf(String.valueOf(readNumberFromFile())));
@@ -127,7 +134,6 @@ public class GameActivity extends AppCompatActivity {
             update_UI(game);
         });
     }
-
 
     private void update_UI(BlackjackGame game) {
         TextView player_cards = findViewById(R.id.players_cards);
