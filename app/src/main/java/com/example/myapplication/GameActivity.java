@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -36,12 +37,10 @@ public class GameActivity extends AppCompatActivity {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_game);
 
-        Button hitButton = findViewById(R.id.hit_button);
-        Button standButton = findViewById(R.id.stand_button);
-        Button doubleButton = findViewById(R.id.double_button);
+        ImageButton hitButton = findViewById(R.id.hit_button);
+        ImageButton standButton = findViewById(R.id.stand_button);
         hitButton.setVisibility(View.GONE);
         standButton.setVisibility(View.GONE);
-        doubleButton.setVisibility(View.GONE);
 
         final TextView title = findViewById(R.id.title);
         new Handler().postDelayed(() -> title.setVisibility(View.GONE), 5000);
@@ -97,9 +96,8 @@ public class GameActivity extends AppCompatActivity {
 
         updateUI();
 
-        Button hitButton = findViewById(R.id.hit_button);
-        Button standButton = findViewById(R.id.stand_button);
-        Button doubleButton = findViewById(R.id.double_button);
+        ImageButton hitButton = findViewById(R.id.hit_button);
+        ImageButton standButton = findViewById(R.id.stand_button);
 
         hitButton.setOnClickListener(view -> {
             game.hit();
@@ -126,15 +124,6 @@ public class GameActivity extends AppCompatActivity {
         });
 
 
-        doubleButton.setOnClickListener(view -> {
-            game.doubleDown();
-            updateUI();
-            if (game.isPlayerTurnComplete()) {
-                game.playDealerHand();
-                updateUI();
-                showResults(game);
-            }
-        });
     }
 
 
@@ -191,6 +180,11 @@ public class GameActivity extends AppCompatActivity {
     private void showResults(BlackjackGame game) {
         LinearLayout playerCardsLayout = findViewById(R.id.player_cards);
         LinearLayout dealerCardsLayout = findViewById(R.id.dealer_cards);
+
+        ImageButton hitButton = findViewById(R.id.hit_button);
+        ImageButton standButton = findViewById(R.id.stand_button);
+        hitButton.setVisibility(View.GONE);
+        standButton.setVisibility(View.GONE);
 
         playerCardsLayout.removeAllViews();
         dealerCardsLayout.removeAllViews();
@@ -269,8 +263,6 @@ public class GameActivity extends AppCompatActivity {
         // Показываем кнопки, если ход игрока не завершен
         findViewById(R.id.hit_button).setVisibility(View.VISIBLE);
         findViewById(R.id.stand_button).setVisibility(View.VISIBLE);
-        findViewById(R.id.double_button)
-                .setVisibility(game.canDouble() ? View.VISIBLE : View.INVISIBLE);
     }
 
 
@@ -381,8 +373,6 @@ public class GameActivity extends AppCompatActivity {
 
         findViewById(R.id.hit_button).setVisibility(View.VISIBLE);
         findViewById(R.id.stand_button).setVisibility(View.VISIBLE);
-        findViewById(R.id.double_button)
-                .setVisibility(game.canDouble() ? View.VISIBLE : View.INVISIBLE);
     }
 
 

@@ -12,7 +12,7 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_margin="8dp"
+        android:layout_margin="0dp"
         android:background="@drawable/table_texture"
         android:orientation="vertical"
         android:scaleY="1.5"
@@ -87,52 +87,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/double_button"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Double" />
-
-        <Button
+        <ImageButton
             android:id="@+id/hit_button"
             android:layout_width="0dp"
+            android:layout_height="165dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Hit" />
-
-        <Button
+            android:background="@null"
+            android:src="@drawable/hit_button" />
+        <ImageButton
             android:id="@+id/stand_button"
             android:layout_width="0dp"
+            android:layout_height="165dp"
             android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:text="Stand" />
+            android:background="@null"
+            android:src="@drawable/stand_button" />
     </LinearLayout>
 
     <!-- Поле ввода ставки -->
     <EditText
         android:id="@+id/bet"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
+        android:layout_height="500dp"
         android:background="?attr/selectableItemBackground"
         android:gravity="center"
         android:padding="12dp"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/player_cards_container"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <!-- Карты игрока (внизу) -->
     <HorizontalScrollView
         android:id="@+id/player_cards_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/results_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:layout_marginBottom="30dp"
+        android:layout_marginStart="30dp"
+
+        app:layout_constraintBottom_toBottomOf="@+id/bet"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <LinearLayout
             android:id="@+id/player_cards"
@@ -140,6 +135,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal" />
     </HorizontalScrollView>
+
 
     <!-- Результаты игры -->
     <TextView
@@ -162,7 +158,8 @@
         android:text="Return"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
