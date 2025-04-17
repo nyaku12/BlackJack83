@@ -10,7 +10,8 @@ public class BlackjackGame {
     private final List<Card> playerCards = new ArrayList<>();
     private final List<Card> dealerCards = new ArrayList<>();
     private int bet;
-    private int n_of_players_cards = 2; // можно изменить из активности
+    private int n_of_players_cards; // можно изменить из активности
+    private int n_of_dealers_cards;
     private boolean playerTurnComplete = false;
 
     public enum GameResult {
@@ -99,6 +100,7 @@ public class BlackjackGame {
             dealerCards.add(deck.remove(0));
         }
         n_of_players_cards = 2;
+        n_of_dealers_cards = 1;
     }
 
     private void fillDeck() {
@@ -115,10 +117,15 @@ public class BlackjackGame {
     public Hand getCurrentHand() {
         return new Hand(playerCards.subList(0, Math.min(n_of_players_cards, playerCards.size())));
     }
+    public Hand getCurrentHandD() {
+        return new Hand(playerCards.subList(0, Math.min(n_of_dealers_cards, dealerCards.size())));
+    }
+
 
     public Hand getDealerHand() {
-        return new Hand(dealerCards.subList(0, Math.min(1, dealerCards.size())));
+        return new Hand(dealerCards.subList(0, Math.min(n_of_dealers_cards, dealerCards.size())));
     }
+
 
     public void hit() {
         if (!playerTurnComplete && n_of_players_cards < 7) {
@@ -139,12 +146,12 @@ public class BlackjackGame {
     }
 
     public void playDealerHand() {
-        // Можно доиграть руку дилера по классике
-        Hand dealerHand = getDealerHand();
-        while (dealerHand.getValue() < 17 && dealerCards.size() < 7) {
-            dealerCards.add(deck.remove(0));
+        while (getDealerHand().getValue() < 17 && n_of_dealers_cards < 7) {
+            n_of_dealers_cards++;
         }
     }
+
+
 
     public boolean canDouble() {
         return n_of_players_cards == 2;

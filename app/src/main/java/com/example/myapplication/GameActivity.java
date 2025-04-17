@@ -105,20 +105,26 @@ public class GameActivity extends AppCompatActivity {
             game.hit();
             updateUI();
             if (game.isPlayerTurnComplete()) {
-                game.playDealerHand();
-                updateUI();
-                showResults(game);
+                game.playDealerHand();  // Начинаем ход дилера
+                updateUI();              // Обновляем UI после хода дилера
+                showResults(game);       // Показываем результат игры
             }
         });
 
         standButton.setOnClickListener(view -> {
-            game.stand();
-            if (game.isPlayerTurnComplete()) {
-                game.playDealerHand();
-                updateUI();
-                showResults(game);
-            }
+            game.stand();  // Игрок завершил ход
+            updateUI();     // Обновим интерфейс
+
+            // Даем дилеру доиграть только после того, как все обновления UI завершены
+            new Handler().postDelayed(() -> {
+                Log.e("MyTag","beforeDealer");
+                game.playDealerHand();  // Дилер доигрывает
+                Log.e("MyTag","afterDealer");
+                updateUI();             // Обновляем UI после хода дилера
+                showResults(game);      // Показываем результат игры
+            }, 500); // Задержка 500мс, чтобы интерфейс успел обновиться
         });
+
 
         doubleButton.setOnClickListener(view -> {
             game.doubleDown();
@@ -239,44 +245,35 @@ public class GameActivity extends AppCompatActivity {
             showResults(game);
             return;
         }
-
-        // Показываем только n открытых карт
-        LinearLayout handLayout = new LinearLayout(this);
-        handLayout.setOrientation(LinearLayout.HORIZONTAL);
-        playerCardsLayout.addView(handLayout);
-
-        List<BlackjackGame.Card> cards = currentHand.getCards();
-        int shownCards = game.getNumberOfVisibleCards(); // <- должно возвращать n_of_players_cards
-
-        for (int i = 0; i < shownCards && i < cards.size(); i++) {
-            BlackjackGame.Card card = cards.get(i);
-            ImageView iv = new ImageView(this);
-
-            String resourceName = "a" + card.getRank().toLowerCase()
-                    + "_of_" + card.getSuit().toLowerCase();
-            int resId = getResources().getIdentifier(resourceName, "drawable", getPackageName());
-            if (resId == 0) {
-                resId = getResources().getIdentifier("back_of_card", "drawable", getPackageName());
-            }
-
-            iv.setImageResource(resId);
-            LinearLayout.LayoutParams params =
-                    new LinearLayout.LayoutParams(dpToPx(60), dpToPx(90));
-            params.setMargins(dpToPx(4), 0, dpToPx(4), 0);
-            handLayout.addView(iv, params);
-        }
+        displayHand(playerCardsLayout, currentHand, "");
 
         LinearLayout dealerCardsLayout = findViewById(R.id.dealer_cards);
         dealerCardsLayout.removeAllViews();
-
         if (game.getDealerHand() != null) {
+            // Обновляем карты дилера
             displayHand(dealerCardsLayout, game.getDealerHand(), "");
         }
 
+        // Проверяем, завершил ли игрок свой ход
+        if (game.isPlayerTurnComplete()) {
+            // Дилер доигрывает
+            game.playDealerHand();
+
+            // Обновляем карты дилера после его хода
+            dealerCardsLayout.removeAllViews();
+            displayHand(dealerCardsLayout, game.getDealerHand(), "");
+
+            showResults(game);  // Показываем результат игры
+        }
+
+        // Показываем кнопки, если ход игрока не завершен
         findViewById(R.id.hit_button).setVisibility(View.VISIBLE);
         findViewById(R.id.stand_button).setVisibility(View.VISIBLE);
-        findViewById(R.id.double_button).setVisibility(game.canDouble() ? View.VISIBLE : View.INVISIBLE);
+        findViewById(R.id.double_button)
+                .setVisibility(game.canDouble() ? View.VISIBLE : View.INVISIBLE);
     }
+
+
 
 
     private void saveNumberToFile(int number) {
