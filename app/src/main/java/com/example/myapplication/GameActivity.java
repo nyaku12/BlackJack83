@@ -76,6 +76,9 @@ public class GameActivity extends AppCompatActivity {
         });
     }
 
+    // добавим поле класса
+    private BlackjackGame game;
+
     private void startGame(int bet, final int[] currentBalance) {
         Button startButton = findViewById(R.id.start_button);
         startButton.setVisibility(View.GONE);
@@ -88,11 +91,11 @@ public class GameActivity extends AppCompatActivity {
 
         TextView cStack = findViewById(R.id.current_stack);
 
-        // Инициализируем игру и начинаем раздачу карт
-        BlackjackGame game = new BlackjackGame();
+        // Используем поле game
+        game = new BlackjackGame();
         game.startGame(bet);
 
-        updateUI(game);
+        updateUI();
 
         Button hitButton = findViewById(R.id.hit_button);
         Button standButton = findViewById(R.id.stand_button);
@@ -100,23 +103,34 @@ public class GameActivity extends AppCompatActivity {
 
         hitButton.setOnClickListener(view -> {
             game.hit();
-            updateUI(game);
+            updateUI();
+            if (game.isPlayerTurnComplete()) {
+                game.playDealerHand();
+                updateUI();
+                showResults(game);
+            }
         });
 
         standButton.setOnClickListener(view -> {
             game.stand();
             if (game.isPlayerTurnComplete()) {
                 game.playDealerHand();
+                updateUI();
+                showResults(game);
             }
-            updateUI(game);
-            showResults(game);
         });
 
         doubleButton.setOnClickListener(view -> {
             game.doubleDown();
-            updateUI(game);
+            updateUI();
+            if (game.isPlayerTurnComplete()) {
+                game.playDealerHand();
+                updateUI();
+                showResults(game);
+            }
         });
     }
+
 
 //    private void updateUI(BlackjackGame game) {
 //        LinearLayout playerCardsLayout = findViewById(R.id.player_cards);
@@ -167,62 +181,45 @@ public class GameActivity extends AppCompatActivity {
 //        doubleButton.setVisibility(game.canDouble() ? View.VISIBLE : View.INVISIBLE);
 //    }
 
+
     private void showResults(BlackjackGame game) {
-        // Получаем контейнер для отображения рук игрока
         LinearLayout playerCardsLayout = findViewById(R.id.player_cards);
-
-
-        if (playerCardsLayout == null) {
-            Log.e("GameActivity", "player_cards layout не найден! Проверь ID в XML");
-        }
-
-
-
-        // Проходим по всем рукам игрока
-        List<BlackjackGame.Hand> hands = game.getPlayerHands();
-        for (int i = 0; i < hands.size(); i++) {
-            // Для каждой руки отображаем заголовок с номером руки
-            String header = "Рука " + (i + 1) + ":";
-
-        }
-
         LinearLayout dealerCardsLayout = findViewById(R.id.dealer_cards);
 
-        if (dealerCardsLayout == null) {
-            Log.e("GameActivity", "dealer_cards layout не найден! Проверь ID в XML");
-        }
+        playerCardsLayout.removeAllViews();
+        dealerCardsLayout.removeAllViews();
 
-        if (game.getDealerHand() != null) {
-            displayHand(dealerCardsLayout, game.getDealerHand(), "");
-        }
+        displayHand(playerCardsLayout, game.getCurrentHand(), "");
+        displayHand(dealerCardsLayout, game.getDealerHand(), "");
 
-        // Далее – обработка результатов игры и обновление баланса (код без изменений)
         List<BlackjackGame.GameResult> results = game.getResults();
-        StringBuilder resultsStr = new StringBuilder();
-        int currentBalance = readNumberFromFile();
+        StringBuilder resultText = new StringBuilder();
+
+        int balance = readNumberFromFile();
         for (BlackjackGame.GameResult result : results) {
             switch (result) {
                 case WIN:
-                    resultsStr.append("Вы выиграли!\n");
-                    currentBalance += 2 * game.getCurrentBet();
+                    resultText.append("Вы выиграли!\n");
+                    balance += 2 * game.getCurrentBet();
                     break;
                 case LOSE:
-                    resultsStr.append("Вы проиграли.\n");
+                    resultText.append("Вы проиграли.\n");
                     break;
                 case PUSH:
-                    resultsStr.append("Ничья.\n");
-                    currentBalance += game.getCurrentBet();
+                    resultText.append("Ничья.\n");
+                    balance += game.getCurrentBet();
                     break;
                 case BLACKJACK:
-                    resultsStr.append("Блэкджек!\n");
-                    currentBalance += (5 * game.getCurrentBet()) / 2;
+                    resultText.append("Блэкджек!\n");
+                    balance += (5 * game.getCurrentBet()) / 2;
                     break;
             }
         }
-        saveNumberToFile(currentBalance);
+
+        saveNumberToFile(balance);
 
         TextView resultsView = findViewById(R.id.results_view);
-        resultsView.setText(resultsStr.toString());
+        resultsView.setText(resultText.toString());
         resultsView.setVisibility(View.VISIBLE);
 
         Button returnButton = findViewById(R.id.return_button);
@@ -232,6 +229,53 @@ public class GameActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+    private void updateUI() {
+        LinearLayout playerCardsLayout = findViewById(R.id.player_cards);
+        playerCardsLayout.removeAllViews();
+
+        BlackjackGame.Hand currentHand = game.getCurrentHand();
+        if (currentHand == null) {
+            showResults(game);
+            return;
+        }
+
+        // Показываем только n открытых карт
+        LinearLayout handLayout = new LinearLayout(this);
+        handLayout.setOrientation(LinearLayout.HORIZONTAL);
+        playerCardsLayout.addView(handLayout);
+
+        List<BlackjackGame.Card> cards = currentHand.getCards();
+        int shownCards = game.getNumberOfVisibleCards(); // <- должно возвращать n_of_players_cards
+
+        for (int i = 0; i < shownCards && i < cards.size(); i++) {
+            BlackjackGame.Card card = cards.get(i);
+            ImageView iv = new ImageView(this);
+
+            String resourceName = "a" + card.getRank().toLowerCase()
+                    + "_of_" + card.getSuit().toLowerCase();
+            int resId = getResources().getIdentifier(resourceName, "drawable", getPackageName());
+            if (resId == 0) {
+                resId = getResources().getIdentifier("back_of_card", "drawable", getPackageName());
+            }
+
+            iv.setImageResource(resId);
+            LinearLayout.LayoutParams params =
+                    new LinearLayout.LayoutParams(dpToPx(60), dpToPx(90));
+            params.setMargins(dpToPx(4), 0, dpToPx(4), 0);
+            handLayout.addView(iv, params);
+        }
+
+        LinearLayout dealerCardsLayout = findViewById(R.id.dealer_cards);
+        dealerCardsLayout.removeAllViews();
+
+        if (game.getDealerHand() != null) {
+            displayHand(dealerCardsLayout, game.getDealerHand(), "");
+        }
+
+        findViewById(R.id.hit_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.stand_button).setVisibility(View.VISIBLE);
+        findViewById(R.id.double_button).setVisibility(game.canDouble() ? View.VISIBLE : View.INVISIBLE);
     }
 
 
@@ -288,7 +332,7 @@ public class GameActivity extends AppCompatActivity {
             ImageView iv = new ImageView(this);
 
             // убрали префикс "a"
-            String resourceName = card.getRank().toLowerCase()
+            String resourceName = "a" + card.getRank().toLowerCase()
                     + "_of_"
                     + card.getSuit().toLowerCase();
             int resId = getResources().getIdentifier(
@@ -332,11 +376,18 @@ public class GameActivity extends AppCompatActivity {
         if (game.getDealerHand() != null) {
             displayHand(dealerCardsLayout, game.getDealerHand(), "");
         }
+        if (game.isPlayerTurnComplete()) {
+            game.playDealerHand();     // Дилер доигрывает, если игрок завершил ход
+            showResults(game);         // Показываем результат
+        }
+
 
         findViewById(R.id.hit_button).setVisibility(View.VISIBLE);
         findViewById(R.id.stand_button).setVisibility(View.VISIBLE);
         findViewById(R.id.double_button)
                 .setVisibility(game.canDouble() ? View.VISIBLE : View.INVISIBLE);
     }
+
+
 
 }
