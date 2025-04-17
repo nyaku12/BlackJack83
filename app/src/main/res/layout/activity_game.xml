@@ -51,27 +51,30 @@
             android:orientation="horizontal" />
     </HorizontalScrollView>
 
-    <!-- Заголовок с подсказкой -->
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:text="Чтобы играть введите ставку в нижней части экрана"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        app:layout_constraintTop_toBottomOf="@id/dealer_cards_container"
+
+    <ImageView
+        android:id="@+id/hi_image"
+        android:layout_width="300dp"
+        android:layout_height="200dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/txt"
+        app:layout_constraintBottom_toTopOf="@+id/bet"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
 
     <!-- Кнопка начала игры -->
     <Button
         android:id="@+id/start_button"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="240dp"
         android:layout_marginTop="12dp"
         android:text="Играть"
-        app:layout_constraintTop_toBottomOf="@id/title"
+        android:alpha="0"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -153,8 +156,9 @@
     <!-- Кнопка возврата -->
     <Button
         android:id="@+id/return_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="150dp"
+        android:alpha="0"
         android:text="Return"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"

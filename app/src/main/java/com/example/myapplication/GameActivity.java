@@ -42,8 +42,8 @@ public class GameActivity extends AppCompatActivity {
         hitButton.setVisibility(View.GONE);
         standButton.setVisibility(View.GONE);
 
-        final TextView title = findViewById(R.id.title);
-        new Handler().postDelayed(() -> title.setVisibility(View.GONE), 5000);
+        final ImageView title = findViewById(R.id.hi_image);
+
 
         // Используем массив для хранения баланса, чтобы переменная была effectively final
         final int[] currentBalance = { readNumberFromFile() };
@@ -82,7 +82,7 @@ public class GameActivity extends AppCompatActivity {
         Button startButton = findViewById(R.id.start_button);
         startButton.setVisibility(View.GONE);
 
-        TextView title = findViewById(R.id.title);
+        final ImageView title = findViewById(R.id.hi_image);
         title.setVisibility(View.GONE);
 
         EditText betInput = findViewById(R.id.bet);
@@ -180,11 +180,6 @@ public class GameActivity extends AppCompatActivity {
     private void showResults(BlackjackGame game) {
         LinearLayout playerCardsLayout = findViewById(R.id.player_cards);
         LinearLayout dealerCardsLayout = findViewById(R.id.dealer_cards);
-
-        ImageButton hitButton = findViewById(R.id.hit_button);
-        ImageButton standButton = findViewById(R.id.stand_button);
-        hitButton.setVisibility(View.GONE);
-        standButton.setVisibility(View.GONE);
 
         playerCardsLayout.removeAllViews();
         dealerCardsLayout.removeAllViews();
