@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -34,17 +35,21 @@ public class StackActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        TextView textView = findViewById(R.id.textView);
+        textView.setText(Integer.toString(readNumberFromFile()));
         Button button = findViewById(R.id.button2);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                TextView textView = findViewById(R.id.textView);
+                textView.setText(Integer.toString(readNumberFromFile()));
                 EditText editText = findViewById(R.id.password);
                 String password = editText.getText().toString();
-                if (hashString(password, "SHA-256").equals("704942d10ca3c5c1d58983f68cd4edecd451e2d214720772b0f9aa68c5b87934") || password.equals("1")) {
+                Log.e("MyTag", hashString("1", "SHA-256"));
+                if (hashString(password, "SHA-256").equals("6b86b273ff34fce19d6b804eff5a3f5747ada4eaa22f1d49c01e52ddb7875b4b")) {
                     int stack = readNumberFromFile(); // Читаем число СИНХРОННО
                     stack += 100; // Увеличиваем на 100
                     saveNumberToFile(stack); // Записываем обратно
-                    Toast.makeText(StackActivity.this, String.valueOf(readNumberFromFile()), Toast.LENGTH_SHORT).show();
                 }
 
                 else {
@@ -52,6 +57,7 @@ public class StackActivity extends AppCompatActivity {
                 }
             }
         });
+
     }
     private void saveNumberToFile(int number) {
         // Запись в файл в фоновом потоке
