@@ -24,6 +24,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
 import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
@@ -47,19 +48,32 @@ public class GameActivity extends AppCompatActivity {
 
         // Используем массив для хранения баланса, чтобы переменная была effectively final
         final int[] currentBalance = { readNumberFromFile() };
-        TextView cStack = findViewById(R.id.current_stack);
-        cStack.setText(String.valueOf(currentBalance[0]));
 
         Button startButton = findViewById(R.id.start_button);
         EditText betInput = findViewById(R.id.bet);
+        Log.e("MyTag", Arrays.toString(currentBalance));
 
         startButton.setOnClickListener(view -> {
             String betText = betInput.getText().toString().trim();
+
             if (betText.isEmpty()) {
-                Toast.makeText(this, "Введите ставку", Toast.LENGTH_SHORT).show();
-                return;
+
+                try {
+                    int bet = readBetFromFile();
+                    if (bet > currentBalance[0] || bet <= 0) {
+                        Toast.makeText(this, "Ставка превышает баланс или равна нулю", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    // Обновляем баланс в массиве и сохраняем его в файл
+                    currentBalance[0] -= bet;
+                    saveNumberToFile(currentBalance[0]);
+                    startGame(bet, currentBalance);
+                } catch (NumberFormatException e) {
+                    Log.e("MyTag", "Some strange shit, there's a bet which passed first check, but not passed second");
+                }
             }
             try {
+                saveBetToFile(Integer.parseInt(betText));
                 int bet = Integer.parseInt(betText);
                 if (bet > currentBalance[0] || bet <= 0) {
                     Toast.makeText(this, "Ставка превышает баланс или равна нулю", Toast.LENGTH_SHORT).show();
@@ -70,7 +84,7 @@ public class GameActivity extends AppCompatActivity {
                 saveNumberToFile(currentBalance[0]);
                 startGame(bet, currentBalance);
             } catch (NumberFormatException e) {
-                Toast.makeText(this, "Некорректная ставка", Toast.LENGTH_SHORT).show();
+                Log.e("MyTag", "inapropriate bet");
             }
         });
     }
@@ -87,8 +101,6 @@ public class GameActivity extends AppCompatActivity {
 
         EditText betInput = findViewById(R.id.bet);
         betInput.setVisibility(View.GONE);
-
-        TextView cStack = findViewById(R.id.current_stack);
 
         // Используем поле game
         game = new BlackjackGame();
@@ -368,6 +380,30 @@ public class GameActivity extends AppCompatActivity {
 
         findViewById(R.id.hit_button).setVisibility(View.VISIBLE);
         findViewById(R.id.stand_button).setVisibility(View.VISIBLE);
+    }
+    private void saveBetToFile(int number) {
+        try (FileOutputStream fos = openFileOutput("bet.txt", MODE_PRIVATE)) {
+            fos.write(String.valueOf(number).getBytes());
+        } catch (IOException e) {
+            e.printStackTrace();
+            runOnUiThread(() ->
+                    Toast.makeText(this, "Ошибка сохранения", Toast.LENGTH_SHORT).show()
+            );
+        }
+    }
+
+    private int readBetFromFile() {
+        try (FileInputStream fis = openFileInput("bet.txt");
+             BufferedReader reader = new BufferedReader(new InputStreamReader(fis))) {
+            String line = reader.readLine();
+            return (line != null) ? Integer.parseInt(line) : 0;
+        } catch (IOException | NumberFormatException e) {
+            e.printStackTrace();
+            runOnUiThread(() ->
+                    Toast.makeText(this, "Ошибка чтения", Toast.LENGTH_SHORT).show()
+            );
+            return 0;
+        }
     }
 
 
