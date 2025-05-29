@@ -5,45 +5,50 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blackjackmenu"
+    android:background="@drawable/main"
     tools:context=".MainActivity">
 
     <!-- Кнопка "Играт" -->
 
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/some_buttons"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent" />
+    <!-- Кнопка "Стек" -->
 
     <Button
         android:id="@+id/button"
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:layout_marginStart="16dp"
+        android:layout_width="225dp"
+        android:layout_height="73dp"
+        android:layout_marginStart="10dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="10dp"
-        android:text="Играт"
+        android:layout_marginBottom="96dp"
         android:alpha="0"
-        app:layout_constraintStart_toStartOf="parent"
+        android:text="Играт"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/button3"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toStartOf="parent" />
 
-    <!-- Кнопка "Стек" -->
     <Button
         android:id="@+id/button3"
         android:layout_width="0dp"
         android:layout_height="70dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="10dp"
-        android:text="Стек"
+        android:layout_marginStart="1dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="104dp"
         android:alpha="0"
-        app:layout_constraintStart_toEndOf="@id/button"
+        android:text="Стек"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/button" />
 
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="0dp"
+        android:layout_height="70dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginEnd="70dp"
+        android:layout_marginBottom="4dp"
+        android:alpha="0"
+        android:text="Правила"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

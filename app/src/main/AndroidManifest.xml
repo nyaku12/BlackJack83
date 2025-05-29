@@ -16,6 +16,9 @@
             android:name=".StackActivity"
             android:exported="false" />
         <activity
+            android:name=".RulesActivity"
+            android:exported="false" />
+        <activity
             android:name=".GameActivity"
             android:exported="false"
             android:theme="@style/Theme.MyApplication" />

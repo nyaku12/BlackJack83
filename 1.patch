@@ -1,0 +1,35 @@
+Subject: [PATCH] +удобная подстановка ставок
+---
+Index: app/src/main/res/layout/activity_stack.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_stack.xml b/app/src/main/res/layout/activity_stack.xml
+--- a/app/src/main/res/layout/activity_stack.xml	(revision 544bf315c7a109b59e364e3caba88c850739287d)
++++ b/app/src/main/res/layout/activity_stack.xml	(revision 0c319ee3c2732f6612c4734e9476562ec50e6053)
+@@ -14,7 +14,8 @@
+         android:layout_height="100dp"
+         android:ems="10"
+         android:gravity="center"
+-        android:textColorLink="@color/black"
++        android:text=""
++        android:textColor="@color/black"
+         android:textSize="50dp"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision 544bf315c7a109b59e364e3caba88c850739287d)
++++ b/app/src/main/res/values/strings.xml	(revision 0c319ee3c2732f6612c4734e9476562ec50e6053)
+@@ -1,5 +1,5 @@
+ <resources>
+-    <string name="app_name">My Application</string>
++    <string name="app_name">Black Jack</string>
+     <!-- Strings used for fragments for navigation -->
+     <string name="first_fragment_label">First Fragment</string>
+     <string name="second_fragment_label">Second Fragment</string>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="vertical"
+    android:fillViewport="true"
+    android:background="@drawable/table_texture">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+    <!-- Заголовок -->
+    <TextView
+        android:id="@+id/title_blackjack_rules"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Правила игры в Блэкджек"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+    <!-- Текст правил -->
+    <TextView
+        android:id="@+id/long_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:textColor="@color/white"
+        android:text="
+Комплект карт: \n
+Играется стандартной колодой из 52 карт.\n\n
+Значения карт:\n
+Тузы- 1 или 11 очков (зависит от ситуации)\n
+2-10- номинальное значение\n
+Вальты, дамы, короли- 10 очков\n\n
+Цель игры:\n
+Набрать 21 очко или максимально близкое к этому число, не превышая его.\n\n
+Начало игры:\n
+Каждому игроку раздается по две карты\n
+Дилер также получает две карты - одна открыта, другая закрыта\n\n
+Ход игры:\n
+До игры нужно получить очки для ставки их можно получить при нажатии кнопки Стэк.Введя пароль 1, получим +100 очков\n
+Заходим в главное меню и нажимаем кнопку играть \n
+Дальше вводим ставку в нижней части экрана и запускаем раздачу карт\n\n
+Игрок может выбрать:\n
+Игрок может 'Hit' (взять ещё карту) или 'Stand' (оставить текущие карты).
+При наборе более 21 очка - проигрыш (“перебор”)\n
+
+Дилер обязан остановиться при 17 и более очках\n\n
+
+Завершение игры:\n
+
+Игра продолжается до тех пор, пока участник не сделает все свои ходы. Побеждает тот, кто набрал наибольшее количество очков, не превысив 21.\n\n
+
+Дополнительные правила:\n
+
+Блэкджек - комбинация туза и десятки/картинки автоматически выигрывает, если у дилера нет такой же комбинации\n\n
+
+Игра требует умения оценивать риски и принимать решения в условиях неопределенности, так как исход во многом зависит от следующих карт и действий дилера.\n"
+        android:lineSpacingExtra="10dp" />
+    </LinearLayout>
+</ScrollView>
