@@ -391,7 +391,6 @@ public class GameActivity extends AppCompatActivity {
             );
         }
     }
-
     private int readBetFromFile() {
         try (FileInputStream fis = openFileInput("bet.txt");
              BufferedReader reader = new BufferedReader(new InputStreamReader(fis))) {
