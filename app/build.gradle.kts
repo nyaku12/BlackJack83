@@ -3,6 +3,13 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        getByName("debug") {
+            storePassword = "elik08"
+            keyAlias = "1"
+            keyPassword = "1"
+        }
+    }
     namespace = "com.example.myapplication"
     compileSdk = 35
 
